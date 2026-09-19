@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sân Cầu Lông Cộng Đồng - Tìm Sân Dễ Dàng</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { color: #334155; background: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 16px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .logo-box { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 20px; color: #0f172a; }
+        .logo-icon { background: #10b981; color: white; padding: 6px 10px; border-radius: 8px; font-style: normal; }
+        .logo-green { color: #059669; }
+        .btn-plus { background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .btn-plus:hover { background: #047857; }
+        .tag-community { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 500; display: inline-block; }
+        
+        .hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%); color: white; padding: 48px 16px; text-align: center; }
+        .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .hero p { color: #cbd5e1; font-size: 15px; margin-bottom: 24px; }
+        .search-box { background: white; padding: 12px; border-radius: 12px; max-width: 700px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; gap: 12px; flex-wrap: wrap; }
+        .search-box select, .search-box input { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; font-size: 14px; outline: none; color: #334155; }
+
+        main { max-width: 1200px; margin: 0 auto; padding: 32px 16px; flex: 1; width: 100%; }
+        .main-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
+        .main-title { font-size: 20px; font-weight: bold; color: #0f172a; }
+        .tip-text { font-size: 13px; color: #64748b; font-style: italic; }
+
+        .court-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: flex-start; }
+        .court-card { width: calc(33.333% - 16px); min-width: 300px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 16px;}
+        @media (max-width: 900px) { .court-card { width: calc(50% - 12px); } }
+        @media (max-width: 600px) { .court-card { width: 100%; } }
+        .court-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        .card-body { padding: 20px; flex: 1; }
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .district-tag { background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; }
+        .scale-text { font-size: 12px; color: #64748b; font-weight: 500; }
+        .court-name { font-size: 18px; font-weight: bold; color: #0f172a; margin-bottom: 8px; text-align: left; }
+        .court-address { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.4; text-align: left; }
+        
+        .price-table { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #f1f5f9; font-size: 13px; }
+        .price-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
+        .price-time { color: #94a3b8; font-weight: normal; font-size: 12px; padding-left: 4px; margin-bottom: 8px; text-align: left; }
+        .price-row.low { color: #047857; }
+        .price-row.high { color: #b45309; }
+        
+        .card-footer { background: #f8fafc; padding: 12px 20px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .btn-call { font-size: 13px; font-weight: 600; color: #334155; text-decoration: none; transition: 0.2s; }
+        .btn-call:hover { color: #059669; }
+        .btn-report { font-size: 13px; color: #e11d48; background: none; border: none; font-weight: 500; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s; }
+        .btn-report:hover { background: #fff1f2; }
+
+        footer { background: #0f172a; color: #94a3b8; font-size: 12px; padding: 24px 16px; margin-top: auto; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-links a { color: #94a3b8; text-decoration: none; margin-left: 16px; transition: 0.2s; }
+        .footer-links a:hover { color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- THANH ĐIỀU HƯỚNG -->
+    <header>
+        <div class="nav-container">
+            <div class="logo-box">
+                <span class="logo-icon">🏸</span>
+                <span>LôngThủ<span class="logo-green">Sân</span></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="tag-community">📋 Dự án vì cộng đồng</span>
+                <button onclick="alert('Tính năng đóng góp dữ liệu sân đang được phát triển!')" class="btn-plus">➕ Đóng góp sân</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- KHU VỰC TÌM KIẾM -->
+    <section class="hero">
+        <h1>Tìm Sân Cầu Lông Gần Bạn</h1>
+        <p>Dữ liệu giờ giấc, giá cả cao điểm và thấp điểm được cập nhật bởi cộng đồng lông thủ.</p>
+        
+        <div class="search-box">
+            <select id="districtFilter" onchange="filterCourts()">
+                <option value="all">📍 Tất cả Quận / Huyện</option>
+                <option value="Quận 1">Quận 1</option>
+                <option value="Quận 7">Quận 7</option>
+                <option value="Quận Bình Thạnh">Quận Bình Thạnh</option>
+            </select>
+            <input id="searchName" type="text" oninput="filterCourts()" placeholder="🔍 Nhập tên sân để tìm nhanh...">
+        </div>
+    </section>
+
+    <!-- DANH SÁCH SÂN CẦU LÔNG -->
+    <main>
+        <div class="main-title-bar">
+            <h2 class="main-title">📋 Danh sách sân hiện có (<span id="courtCount">3</span>)</h2>
+            <span class="tip-text">Mẹo: Nhấn nút "Báo giá sai" để hỗ trợ cập nhật thông tin</span>
+        </div>
+
+        <div id="courtContainer" class="court-grid">
+            <!-- SÂN SỐ 1 -->
+            <div class="court-card" data-district="Quận 1" data-name="sân cầu lông đa năng nguyễn du">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="district-tag">Quận 1</span>
+                        <span class="scale-text">🗂️ Quy mô: 4 sân</span>
+                    </div>
+                    <h3 class="court-name">Sân Cầu Lông Đa Năng Nguyễn Du</h3>
+                    <p class="court-address">📍 116 Nguyễn Du, Phường Bến Thành, Quận 1</p>
+                    <div class="price-table">
+                        <div>
+                            <div class="price-row low"><span>☀️ Giờ thấp điểm</span><span>60.000đ - 80.000đ</span></div>
+                            <div class="price-time">05:00 - 16:00 (Thứ 2 - Thứ 6)</div>
+                        </div>
+                        <div style="border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 4px;">
+                            <div class="price-row high"><span>⚡ Giờ cao điểm</span><span>90.000đ - 110.000đ</span></div>
+                            <div class="price-time">16:00 - 22:00 & Cuối tuần</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="tel:0283824xxxx" class="btn-call">📞 Gọi đặt sân</a>
+                    <button onclick="alert('Hệ thống đã ghi nhận yêu cầu rà soát giá của Sân Nguyễn Du!')" class="btn-report">⚠️ Báo giá sai</button>
+                </div>
+            </div>
+
+            <!-- SÂN SỐ 2 -->
+            <div class="court-card" data-district="Quận 7" data-name="sân cầu lông t79">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="district-tag">Quận 7</span>
+                        <span class="scale-text">🗂️ Quy mô: 10 sân</span>
+                    </div>
+                    <h3 class="court-name">Sân Cầu Lông T79</h3>
+                    <p class="court-address">📍 799 Nguyễn Văn Linh, Tân Phú, Quận 7</p>
+                    <div class="price-table">
+                        <div>
+                            <div class="price-row low"><span>☀️ Giờ thấp điểm</span><span>70.000đ - 85.000đ</span></div>
+                            <div class="price-time">06:00 - 15:00 (Thứ 2 - Thứ 6)</div>
+                        </div>
+                        <div style="border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 4px;">
+                            <div class="price-row high"><span>⚡ Giờ cao điểm</span><span>100.000đ - 130.000đ</span></div>
+                            <div class="price-time">15:00 - 23:00 & Cuối tuần</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="tel:0903123xxxx" class="btn-call">📞 Gọi đặt sân</a>
