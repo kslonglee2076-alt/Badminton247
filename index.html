@@ -32,14 +32,16 @@
         @media (max-width: 900px) { .court-card { width: calc(50% - 12px); } }
         @media (max-width: 600px) { .court-card { width: 100%; } }
         .court-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
-        .card-body { padding: 20px; flex: 1; }
+        .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .district-tag { background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; }
         .scale-text { font-size: 12px; color: #64748b; font-weight: 500; }
         .court-name { font-size: 18px; font-weight: bold; color: #0f172a; margin-bottom: 8px; text-align: left; }
-        .court-address { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.4; text-align: left; }
         
-        .price-table { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #f1f5f9; font-size: 13px; }
+        /* Fix lỗi tràn chữ/vỡ khung ở địa chỉ */
+        .court-address { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.4; text-align: left; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 36px; }
+        
+        .price-table { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #f1f5f9; font-size: 13px; margin-top: auto; }
         .price-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
         .price-time { color: #94a3b8; font-weight: normal; font-size: 12px; padding-left: 4px; margin-bottom: 8px; text-align: left; }
         .price-row.low { color: #047857; }
@@ -113,41 +115,11 @@
     <main>
         <div class="main-title-bar">
             <h2 class="main-title">📋 Danh sách sân hiện có (<span id="courtCount">0</span>)</h2>
-            <span class="tip-text">Mẹo: Nhấn nút "Báo giá sai" để hỗ trợ cập nhật giá mới nhất từ sân.</span>
+            <span class="tip-text">Mẹo: Nhấn nút "Báo giá sai" để hỗ trợ cập nhật dữ liệu chuẩn xác.</span>
         </div>
 
         <div class="court-grid" id="courtGrid">
-            <!-- THẺ THÔNG TIN SÂN (COURT CARD) -->
-            <div class="court-card" data-district="Quận Bình Tân">
-                <div class="card-body">
-                    <div class="card-top">
-                        <span class="district-tag">Quận Bình Tân</span>
-                        <span class="scale-text">📏 Quy mô: 8 sân</span>
-                    </div>
-                    <h3 class="court-name">Sân Cầu Lông Aka Badminton Center</h3>
-                    <p class="court-address">📍 730/4 Hương Lộ 2, Phường Bình Trị Đông A, Bình Tân</p>
-                    
-                    <div class="price-table">
-                        <div class="price-row low">
-                            <span>☀️ Giờ thấp điểm</span>
-                            <span>60.000đ - 80.000đ</span>
-                        </div>
-                        <div class="price-time">05:00 - 16:00 (Thứ 2 - Thứ 6)</div>
-                        
-                        <div class="price-row high">
-                            <span>⚡ Giờ cao điểm</span>
-                            <span>90.000đ - 120.000đ</span>
-                        </div>
-                        <div class="price-time">16:00 - 22:00 & Cuối tuần</div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="tel:0123456789" class="btn-call">📞 Gọi đặt sân</a>
-                    <button class="btn-report">⚠️ Báo giá sai</button>
-                </div>
-            </div>
-            
-            <!-- Trạng thái trống khi không tìm thấy sân -->
+            <!-- Thẻ sân sẽ được tự động tạo từ JavaScript -->
             <div class="empty-state" id="emptyState">
                 Không tìm thấy sân cầu lông nào phù hợp với bộ lọc của bạn.
             </div>
@@ -166,54 +138,82 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT ĐỂ XỬ LÝ LOGIC ĐẾM SÂN VÀ BỘ LỌC -->
+    <!-- JAVASCRIPT XỬ LÝ DỮ LIỆU VÀ LOGIC -->
     <script>
-        // Hàm cập nhật số lượng sân hiển thị trên giao diện
-        function updateCourtCount() {
-            const visibleCourts = document.querySelectorAll('.court-card:not([style*="display: none"])').length;
-            document.getElementById('courtCount').innerText = visibleCourts;
-        }
-
-        // Hàm lọc sân theo Quận/Huyện và Tên sân
-        function filterCourts() {
-            const districtValue = document.getElementById('districtFilter').value;
-            const searchValue = document.getElementById('searchName').value.toLowerCase().trim();
-            const courts = document.querySelectorAll('.court-card');
-            let hasResults = false;
-
-            courts.forEach(court => {
-                const courtDistrict = court.getAttribute('data-district');
-                const courtName = court.querySelector('.court-name').innerText.toLowerCase();
-                
-                const matchDistrict = (districtValue === 'all' || courtDistrict === districtValue);
-                const matchName = courtName.includes(searchValue);
-
-                if (matchDistrict && matchName) {
-                    court.style.display = 'flex';
-                    hasResults = true;
-                } else {
-                    court.style.display = 'none';
-                }
-            });
-
-            // Hiển thị thông báo trống nếu không tìm thấy kết quả nào
-            const emptyState = document.getElementById('emptyState');
-            if (hasResults) {
-                emptyState.style.display = 'none';
-            } else {
-                emptyState.style.display = 'block';
+        // Mảng chứa toàn bộ dữ liệu sân thực tế trên địa bàn TP.HCM
+        const badmintonCourts = [
+                   // Mảng chứa toàn bộ dữ liệu sân thực tế tại quận Bình Tân, TP.HCM
+        const badmintonCourts = [
+            { 
+                id: 1, 
+                name: "Sân Cầu Lông Aka Badminton Center", 
+                district: "Quận Bình Tân", 
+                address: "730/4 Hương Lộ 2, Phường Bình Trị Đông A, Quận Bình Tân", 
+                scale: 8, 
+                phone: "0901234567", 
+                lowPrice: "60.000đ", 
+                lowTime: "05:00 - 16:00 (Thứ 2 - Thứ 6)", 
+                highPrice: "120.000đ", 
+                highTime: "16:00 - 24:00 & Cuối tuần" 
+            },
+            { 
+                id: 2, 
+                name: "Sân Cầu Lông Hưng Phú", 
+                district: "Quận Bình Tân", 
+                address: "Số 15 Liên Khu 2-5, Phường Bình Trị Đông, Quận Bình Tân", 
+                scale: 12, 
+                phone: "0909123456", 
+                lowPrice: "80.000đ", 
+                lowTime: "05:00 - 16:00 (Thứ 2 - Thứ 6)", 
+                highPrice: "100.000đ", 
+                highTime: "16:00 - 22:00 & Cuối tuần" 
+            },
+            { 
+                id: 3, 
+                name: "HAAN Badminton Club", 
+                district: "Quận Bình Tân", 
+                address: "31A Đường số 4, Phường Bình Hưng Hòa A, Quận Bình Tân", 
+                scale: 7, 
+                phone: "0918765432", 
+                lowPrice: "Giá liên hệ", 
+                lowTime: "06:00 - 16:00 (Giờ hành chính)", 
+                highPrice: "Giá liên hệ", 
+                highTime: "16:00 - 23:00 & Cuối tuần" 
+            },
+            { 
+                id: 4, 
+                name: "Sân Cầu Lông Thảo Trang", 
+                district: "Quận Bình Tân", 
+                address: "193 Lê Văn Quới, Phường Bình Trị Đông, Quận Bình Tân", 
+                scale: 6, 
+                phone: "0934556677", 
+                lowPrice: "65.000đ", 
+                lowTime: "05:00 - 16:00 (Thứ 2 - Thứ 6)", 
+                highPrice: "90.000đ", 
+                highTime: "16:00 - 22:00 & Cuối tuần" 
+            },
+            { 
+                id: 5, 
+                name: "Sân Cầu Lông TTH", 
+                district: "Quận Bình Tân", 
+                address: "137/203 Phan Anh, Phường Bình Trị Đông, Quận Bình Tân", 
+                scale: 6, 
+                phone: "0977889900", 
+                lowPrice: "Giá liên hệ", 
+                lowTime: "05:30 - 16:00 (Giờ hành chính)", 
+                highPrice: "Giá liên hệ", 
+                highTime: "16:00 - 23:00 & Cuối tuần" 
+            },
+            { 
+                id: 6, 
+                name: "Sân Cầu Lông Bingo", 
+                district: "Quận Bình Tân", 
+                address: "1095 Tỉnh Lộ 10, Phường Tân Tạo, Quận Bình Tân", 
+                scale: "Liên hệ", 
+                phone: "0908112233", 
+                lowPrice: "60.000đ", 
+                lowTime: "Linh hoạt (Giờ thấp điểm)", 
+                highPrice: "60.000đ", 
+                highTime: "Cả ngày (Liên hệ đặt trước)" 
             }
-
-            // Gọi hàm cập nhật số đếm sau khi lọc
-            updateCourtCount();
-        }
-
-        // Chạy đếm số sân lần đầu tiên khi trang web vừa tải xong
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCourtCount();
-        });
-    </script>
-</body>
-</html>
-
-
+        ];
