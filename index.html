@@ -51,6 +51,7 @@
         .btn-report { font-size: 13px; color: #e11d48; background: none; border: none; font-weight: 500; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s; }
         .btn-report:hover { background: #fff1f2; }
 
+        .empty-state { text-align: center; padding: 48px; background: white; border: 2px dashed #cbd5e1; border-radius: 12px; color: #64748b; font-weight: 500; display: none; width: 100%; }
         footer { background: #0f172a; color: #94a3b8; font-size: 12px; padding: 24px 16px; margin-top: auto; }
         .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
         .footer-links a { color: #94a3b8; text-decoration: none; margin-left: 16px; transition: 0.2s; }
@@ -111,37 +112,34 @@
     <!-- DANH SÁCH SÂN CẦU LÔNG -->
     <main>
         <div class="main-title-bar">
-            <h2 class="main-title">📋 Danh sách sân hiện có (<span id="courtCount">3</span>)</h2>
+            <h2 class="main-title">📋 Danh sách sân hiện có (<span id="courtCount">0</span>)</h2>
             <span class="tip-text">Mẹo: Nhấn nút "Báo giá sai" để hỗ trợ cập nhật thông tin</span>
         </div>
 
         <div id="courtContainer" class="court-grid">
-            <!-- SÂN SỐ 1 - BÌNH TÂN -->
-            <div class="court-card" data-district="Quận Bình Tân" data-name="sân cầu lông gia bảo bình tân">
+            <!-- SÂN 1: AKA BADMINTON CENTER -->
+            <div class="court-card" data-district="Quận Bình Tân" data-name="sân cầu lông aka badminton center hương lộ 2">
                 <div class="card-body">
                     <div class="card-top">
                         <span class="district-tag">Quận Bình Tân</span>
-                        <span class="scale-text">🗂️ Quy mô: 6 sân</span>
+                        <span class="scale-text">🗂️ Quy mô: 8 sân</span>
                     </div>
-                    <h3 class="court-name">Sân Cầu Lông Gia Bảo</h3>
-                    <p class="court-address">📍 94 Đường số 29, Phường Bình Trị Đông B, Bình Tân</p>
+                    <h3 class="court-name">Sân Cầu Lông Aka Badminton Center</h3>
+                    <p class="court-address">📍 730/4 Hương Lộ 2, Phường Bình Trị Đông A, Bình Tân</p>
                     <div class="price-table">
                         <div>
-                            <div class="price-row low"><span>☀️ Giờ thấp điểm</span><span>55.000đ - 70.000đ</span></div>
+                            <div class="price-row low"><span>☀️ Giờ thấp điểm</span><span>60.000đ - 80.000đ</span></div>
                             <div class="price-time">05:00 - 16:00 (Thứ 2 - Thứ 6)</div>
                         </div>
                         <div style="border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 4px;">
-                            <div class="price-row high"><span>⚡ Giờ cao điểm</span><span>85.000đ - 100.000đ</span></div>
-                            <div class="price-time">16:00 - 22:00 & Cuối tuần</div>
+                            <div class="price-row high"><span>⚡ Giờ cao điểm</span><span>90.000đ - 120.000đ</span></div>
+                            <div class="price-time">16:00 - 24:00 & Cuối tuần</div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="tel:090xxxxxxx" class="btn-call">📞 Gọi đặt sân</a>
-                    <button onclick="alert('Hệ thống đã ghi nhận yêu cầu rà soát giá của Sân Gia Bảo!')" class="btn-report">⚠️ Báo giá sai</button>
+                    <a href="tel:0977508430" class="btn-call">📞 Gọi đặt sân</a>
+                    <button onclick="alert('Đã ghi nhận báo lỗi giá cho Sân Aka Badminton Center!')" class="btn-report">⚠️ Báo giá sai</button>
                 </div>
             </div>
 
-            <!-- SÂN SỐ 2 - BÌNH TÂN -->
-            <div class="court-card" data-district="Quận Bình Tân" data-name="sân cầu lông an lạc">
-                <div class="card-body">
