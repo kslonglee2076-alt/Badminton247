@@ -123,8 +123,72 @@ async function initHome() {
       }
     });
 
-    $('#contributeBtn')?.addEventListener('click', () => {
-      alert('Form đóng góp sân sẽ được triển khai ở bước 1.2. Hiện tại dữ liệu được quản lý trong data/courts.json.');
+    const contributeModal = $('#contributeModal');
+    const contributeForm = $('#contributeForm');
+
+    function openContribution() {
+      if (!contributeModal) return;
+      contributeModal.hidden = false;
+      document.body.classList.add('modal-open');
+      $('#contribName')?.focus();
+    }
+
+    function closeContribution() {
+      if (!contributeModal) return;
+      contributeModal.hidden = true;
+      document.body.classList.remove('modal-open');
+    }
+
+    $('#contributeBtn')?.addEventListener('click', openContribution);
+    $('#closeContributeBtn')?.addEventListener('click', closeContribution);
+    $('#cancelContributeBtn')?.addEventListener('click', closeContribution);
+
+    contributeModal?.addEventListener('click', (event) => {
+      if (event.target === contributeModal) closeContribution();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && contributeModal && !contributeModal.hidden) {
+        closeContribution();
+      }
+    });
+
+    contributeForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const data = Object.fromEntries(new FormData(contributeForm).entries());
+      const title = `[Đóng góp sân] ${data.name || 'Sân cầu lông mới'}`;
+
+      const body = [
+        '## Thông tin sân',
+        '',
+        `- **Tên sân:** ${data.name || ''}`,
+        `- **Địa chỉ:** ${data.address || ''}`,
+        `- **Quận / Huyện:** ${data.district || ''}`,
+        `- **Số điện thoại:** ${data.phone || 'Chưa cung cấp'}`,
+        `- **Quy mô:** ${data.scale ? `${data.scale} sân` : 'Chưa cung cấp'}`,
+        `- **Giờ hoạt động:** ${data.hours || 'Chưa cung cấp'}`,
+        `- **Giá thấp điểm:** ${data.lowPrice || 'Chưa cung cấp'}`,
+        `- **Giá cao điểm:** ${data.highPrice || 'Chưa cung cấp'}`,
+        `- **Google Maps:** ${data.map || 'Chưa cung cấp'}`,
+        '',
+        '## Thông tin thêm',
+        '',
+        data.note || 'Không có',
+        '',
+        '---',
+        'Được gửi từ biểu mẫu Đóng góp sân trên SanCauLong.vn.',
+        'Vui lòng kiểm tra thông tin trước khi cập nhật vào data/courts.json.'
+      ].join('\n');
+
+      const issueUrl =
+        'https://github.com/kslonglee2076-alt/Badminton247/issues/new' +
+        `?title=${encodeURIComponent(title)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+      window.open(issueUrl, '_blank', 'noopener');
+      contributeForm.reset();
+      closeContribution();
     });
 
     render(courts);

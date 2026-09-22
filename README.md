@@ -1,4 +1,4 @@
-# SanCauLong.vn / Badminton247 - Giai đoạn 1.1
+# SanCauLong.vn / Badminton247 - Phase 3
 
 Phiên bản này tách website thành các phần dễ quản lý hơn:
 
@@ -24,7 +24,7 @@ Vào:
 3. Khi thêm sân, copy một object trong `courts.json`, đổi `id` thành duy nhất.
 4. Trang chi tiết dùng URL dạng:
    `pages/court.html?id=1`
-5. Nút "Đóng góp sân" và hệ thống "Báo giá sai" sẽ được triển khai ở giai đoạn 1.2 khi có nơi lưu dữ liệu.
+5. Nút "Đóng góp sân" đã có biểu mẫu và tạo GitHub Issue để cộng đồng gửi dữ liệu chờ xác minh.
 
 
 ## Bản đóng gói hoàn chỉnh
@@ -53,3 +53,12 @@ Vào:
 - Nút gọi sân từ danh sách và trang chi tiết.
 - Nút Chỉ đường mở Google Maps theo địa chỉ sân.
 - Phím Escape xóa nhanh từ khóa tìm kiếm.
+
+
+## Phase 3 — Đóng góp sân
+
+- Nút **Đóng góp sân** mở biểu mẫu ngay trên trang.
+- Có các trường: tên sân, địa chỉ, quận/huyện, số điện thoại, quy mô, giờ hoạt động, giá, Google Maps và ghi chú.
+- Khi gửi, website tạo một **GitHub Issue** trong repository để lưu đề xuất và chờ xác minh.
+- Dữ liệu chưa được tự động đưa vào danh sách sân; người quản trị cần kiểm tra trước khi cập nhật `data/courts.json`.
+- Không cần máy chủ riêng cho bước này; GitHub Issues đóng vai trò nơi tiếp nhận đề xuất.

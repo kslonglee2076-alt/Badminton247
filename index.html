@@ -63,6 +63,83 @@
   </div>
 </main>
 
+
+  <div class="modal-backdrop" id="contributeModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contributeTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="contributeTitle">Đóng góp sân cầu lông</h2>
+          <p>Thông tin sẽ được gửi để cộng đồng kiểm tra trước khi cập nhật.</p>
+        </div>
+        <button type="button" class="modal-close" id="closeContributeBtn" aria-label="Đóng">×</button>
+      </div>
+
+      <form id="contributeForm" class="contribute-form">
+        <div class="form-grid">
+          <div class="form-field form-full">
+            <label for="contribName">Tên sân <span>*</span></label>
+            <input id="contribName" name="name" required maxlength="120" placeholder="Ví dụ: Sân Cầu Lông ABC">
+          </div>
+
+          <div class="form-field form-full">
+            <label for="contribAddress">Địa chỉ <span>*</span></label>
+            <input id="contribAddress" name="address" required maxlength="220" placeholder="Số nhà, đường, phường/xã, quận/huyện">
+          </div>
+
+          <div class="form-field">
+            <label for="contribDistrict">Quận / Huyện <span>*</span></label>
+            <input id="contribDistrict" name="district" required maxlength="80" placeholder="Ví dụ: Quận Bình Tân">
+          </div>
+
+          <div class="form-field">
+            <label for="contribPhone">Số điện thoại</label>
+            <input id="contribPhone" name="phone" type="tel" maxlength="30" placeholder="090...">
+          </div>
+
+          <div class="form-field">
+            <label for="contribScale">Quy mô (số sân)</label>
+            <input id="contribScale" name="scale" type="number" min="1" max="200" placeholder="Ví dụ: 8">
+          </div>
+
+          <div class="form-field">
+            <label for="contribHours">Giờ hoạt động</label>
+            <input id="contribHours" name="hours" maxlength="100" placeholder="Ví dụ: 05:00 - 24:00">
+          </div>
+
+          <div class="form-field">
+            <label for="contribLowPrice">Giá thấp điểm</label>
+            <input id="contribLowPrice" name="lowPrice" maxlength="50" placeholder="Ví dụ: 60.000đ">
+          </div>
+
+          <div class="form-field">
+            <label for="contribHighPrice">Giá cao điểm</label>
+            <input id="contribHighPrice" name="highPrice" maxlength="50" placeholder="Ví dụ: 120.000đ">
+          </div>
+
+          <div class="form-field form-full">
+            <label for="contribMap">Link Google Maps</label>
+            <input id="contribMap" name="map" type="url" maxlength="500" placeholder="Dán link Google Maps nếu có">
+          </div>
+
+          <div class="form-field form-full">
+            <label for="contribNote">Thông tin thêm</label>
+            <textarea id="contribNote" name="note" rows="4" maxlength="1000" placeholder="Ví dụ: có chỗ gửi xe, sân ngoài trời, liên hệ quản lý..."></textarea>
+          </div>
+        </div>
+
+        <div class="contribute-note">
+          <strong>ℹ️ Quy trình cộng đồng</strong>
+          <span>Đóng góp sẽ mở một phiếu trên GitHub để lưu lại và chờ xác minh. Chưa có thông tin nào được tự động đưa vào danh sách sân.</span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelContributeBtn">Hủy</button>
+          <button type="submit" class="btn btn-primary">📨 Gửi đóng góp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 <footer>
   <div class="container footer">
     <div>© 2026 SanCauLong.vn. Bản quyền thuộc về cộng đồng cầu lông.</div>
