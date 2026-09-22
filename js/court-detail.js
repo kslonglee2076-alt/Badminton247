@@ -18,9 +18,13 @@ async function initDetail() {
   }
 
   try {
-    const response = await fetch('../data/courts.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error('Không thể tải dữ liệu sân.');
-    const courts = await response.json();
+    let courts;
+    try {
+      const response = await fetch('../data/courts.json', { cache: 'no-store' });
+      if (response.ok) courts = await response.json();
+    } catch (_) {}
+    if (!Array.isArray(courts)) courts = window.BADMINTON_COURTS;
+    if (!Array.isArray(courts)) throw new Error('Không thể tải dữ liệu sân.');
     const court = courts.find(item => String(item.id) === String(id));
 
     if (!court) {
@@ -30,7 +34,7 @@ async function initDetail() {
 
     const name = escapeHTML(court.name);
     const phone = safePhone(court.phone);
-    document.title = `${court.name} - LôngThủSân`;
+    document.title = `${court.name} - SanCauLong.vn`;
 
     container.innerHTML = `
       <div class="breadcrumb"><a href="../index.html">Trang chủ</a> / ${name}</div>

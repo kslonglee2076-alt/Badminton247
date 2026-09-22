@@ -13,9 +13,12 @@ const escapeHTML = (value) =>
 const safePhone = (phone) => String(phone ?? '').replace(/[^0-9+]/g, '');
 
 async function loadCourts() {
-  const response = await fetch('./data/courts.json', { cache: 'no-store' });
-  if (!response.ok) throw new Error('Không thể tải dữ liệu sân.');
-  return response.json();
+  try {
+    const response = await fetch('./data/courts.json', { cache: 'no-store' });
+    if (response.ok) return await response.json();
+  } catch (_) {}
+  if (Array.isArray(window.BADMINTON_COURTS)) return window.BADMINTON_COURTS;
+  throw new Error('Không thể tải dữ liệu sân.');
 }
 
 function createCourtCard(court) {

@@ -1,4 +1,4 @@
-# LôngThủSân / Badminton247 - Giai đoạn 1.1
+# SanCauLong.vn / Badminton247 - Giai đoạn 1.1
 
 Phiên bản này tách website thành các phần dễ quản lý hơn:
 
@@ -32,3 +32,14 @@ Vào:
 - Đã bổ sung `assets/` với logo và favicon SVG local.
 - Đã bổ sung `js/data.js` làm dữ liệu dự phòng để website vẫn chạy khi mở `index.html` trực tiếp bằng `file://`.
 - Vẫn giữ `data/courts.json` làm nguồn dữ liệu chính khi chạy qua web server.
+
+
+## Branding
+
+- Tên hiển thị trên website: **SanCauLong.vn**
+- Logo sử dụng hình ảnh thương hiệu do chủ dự án cung cấp.
+- `assets/logo-sancaulong.png`: logo đầy đủ.
+- `assets/logo-mark.png`: biểu tượng dùng ở thanh đầu trang.
+- `assets/favicon.png`: favicon của website.
+
+> Tên repo GitHub vẫn có thể giữ là `Badminton247`. Đổi tên thương hiệu trên website không bắt buộc phải đổi tên repo.
