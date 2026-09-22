@@ -28,7 +28,7 @@ function createCourtCard(court) {
   const phone = safePhone(court.phone);
   const detailUrl = `./pages/court.html?id=${encodeURIComponent(court.id)}`;
   const telHref = phone ? `tel:${phone}` : '';
-  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
+  const mapHref = court.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
 
   return `
     <article class="court-card">
@@ -41,8 +41,9 @@ function createCourtCard(court) {
         <p class="address">📍 ${address}</p>
         <div class="meta-row">
           <span class="status ${court.verified ? 'verified' : ''}">
-            ${court.verified ? '🟢 Đã xác minh' : '🟡 Cộng đồng cung cấp'}
+            ${escapeHTML(court.verificationStatus || (court.verified ? 'Đã xác minh' : 'Cộng đồng cung cấp'))}
           </span>
+          <span class="updated-badge">Cập nhật ${escapeHTML(court.lastUpdated || 'chưa rõ')}</span>
         </div>
         <div class="price-box">
           <div class="price-row low"><span>☀️ Giờ thấp điểm</span><span>${escapeHTML(court.lowPrice)}</span></div>

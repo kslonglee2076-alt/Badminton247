@@ -64,3 +64,12 @@ Vào:
 - Không cần máy chủ riêng cho bước này; GitHub Issues đóng vai trò nơi tiếp nhận đề xuất.
 
 - Biểu mẫu có thêm trường **Ý kiến góp ý** để người gửi nêu đề xuất hoặc lưu ý riêng.
+
+
+## Phase 4 — Chất lượng dữ liệu sân
+
+- Chuẩn hóa metadata: `source`, `verificationStatus`, `lastUpdated`, `mapUrl`, `facilities`, `notes`.
+- Trang danh sách hiển thị trạng thái và ngày cập nhật.
+- Trang chi tiết hiển thị nguồn dữ liệu, trạng thái xác minh, liên hệ, tiện ích và ghi chú.
+- Link Google Maps ưu tiên `mapUrl` nếu dữ liệu có sẵn; nếu không sẽ dùng tìm kiếm theo địa chỉ.
+- Không tự suy đoán tiện ích hoặc thông tin chưa được cung cấp.

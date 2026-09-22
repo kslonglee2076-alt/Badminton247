@@ -34,6 +34,13 @@ async function initDetail() {
 
     const name = escapeHTML(court.name);
     const phone = safePhone(court.phone);
+    const mapHref = court.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
+    const statusText = court.verificationStatus || (court.verified ? 'Đã xác minh' : 'Cộng đồng cung cấp');
+    const sourceText = court.source || 'Chưa xác định';
+    const facilities = Array.isArray(court.facilities) ? court.facilities : [];
+    const facilitiesHTML = facilities.length
+      ? facilities.map(item => `<span class="facility-chip">✓ ${escapeHTML(item)}</span>`).join('')
+      : '<span class="muted">Chưa có dữ liệu tiện ích.</span>';
     document.title = `${court.name} - SanCauLong.vn`;
 
     container.innerHTML = `
@@ -47,7 +54,7 @@ async function initDetail() {
           </div>
           <div class="detail-actions">
             <a class="btn btn-primary" href="${phone ? `tel:${phone}` : '#'}">📞 Gọi sân</a>
-            <a class="btn btn-secondary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}">🧭 Chỉ đường</a>
+            <a class="btn btn-secondary" target="_blank" rel="noopener" href="${mapHref}">🧭 Chỉ đường</a>
           </div>
         </div>
 
@@ -56,12 +63,25 @@ async function initDetail() {
           <div class="info"><div class="info-label">Giờ hoạt động</div><div class="info-value">${escapeHTML(court.openingHours || 'Liên hệ sân')}</div></div>
           <div class="info"><div class="info-label">Giờ thấp điểm</div><div class="info-value">${escapeHTML(court.lowPrice)}</div><p class="muted">${escapeHTML(court.lowTime)}</p></div>
           <div class="info"><div class="info-label">Giờ cao điểm</div><div class="info-value">${escapeHTML(court.highPrice)}</div><p class="muted">${escapeHTML(court.highTime)}</p></div>
-          <div class="info"><div class="info-label">Trạng thái dữ liệu</div><div class="info-value">${court.verified ? '🟢 Đã xác minh' : '🟡 Cộng đồng cung cấp'}</div></div>
+          <div class="info"><div class="info-label">Trạng thái dữ liệu</div><div class="info-value">${court.verified ? '🟢' : '🟡'} ${escapeHTML(statusText)}</div></div>
           <div class="info"><div class="info-label">Cập nhật lần cuối</div><div class="info-value">${escapeHTML(court.lastUpdated || 'Chưa rõ')}</div></div>
+          <div class="info"><div class="info-label">Nguồn dữ liệu</div><div class="info-value">${escapeHTML(sourceText)}</div></div>
+          <div class="info"><div class="info-label">Liên hệ</div><div class="info-value">${phone ? escapeHTML(court.phone) : 'Chưa có số điện thoại'}</div></div>
+        </div>
+
+        <div class="detail-extra">
+          <div class="extra-block">
+            <h2>Tiện ích</h2>
+            <div class="facility-list">${facilitiesHTML}</div>
+          </div>
+          <div class="extra-block">
+            <h2>Ghi chú</h2>
+            <p class="detail-note">${escapeHTML(court.notes || 'Chưa có ghi chú.')}</p>
+          </div>
         </div>
 
         <div class="notice">
-          ℹ️ Giá và giờ hoạt động có thể thay đổi. Hãy liên hệ sân trước khi đến. Dữ liệu hiện tại là dữ liệu nền để xây dựng hệ thống và cần được xác minh thực tế.
+          ℹ️ Giá và giờ hoạt động có thể thay đổi. Hãy liên hệ sân trước khi đến. Dữ liệu trên trang được gắn nguồn và trạng thái để dễ kiểm tra, nhưng vẫn nên xác minh thực tế trước khi sử dụng.
         </div>
         <div class="back-row"><a class="btn btn-secondary" href="../index.html">← Quay lại danh sách sân</a></div>
       </article>`;
