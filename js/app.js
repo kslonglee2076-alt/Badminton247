@@ -176,6 +176,10 @@ async function initHome() {
         '',
         data.note || 'Không có',
         '',
+        '## Ý kiến góp ý',
+        '',
+        data.feedback || 'Không có',
+        '',
         '---',
         'Được gửi từ biểu mẫu Đóng góp sân trên SanCauLong.vn.',
         'Vui lòng kiểm tra thông tin trước khi cập nhật vào data/courts.json.'

@@ -62,3 +62,5 @@ Vào:
 - Khi gửi, website tạo một **GitHub Issue** trong repository để lưu đề xuất và chờ xác minh.
 - Dữ liệu chưa được tự động đưa vào danh sách sân; người quản trị cần kiểm tra trước khi cập nhật `data/courts.json`.
 - Không cần máy chủ riêng cho bước này; GitHub Issues đóng vai trò nơi tiếp nhận đề xuất.
+
+- Biểu mẫu có thêm trường **Ý kiến góp ý** để người gửi nêu đề xuất hoặc lưu ý riêng.
