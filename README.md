@@ -43,3 +43,13 @@ Vào:
 - `assets/favicon.png`: favicon của website.
 
 > Tên repo GitHub vẫn có thể giữ là `Badminton247`. Đổi tên thương hiệu trên website không bắt buộc phải đổi tên repo.
+
+
+## Phase 2 — Tìm sân nhanh
+
+- Lọc sân theo quận/huyện.
+- Tìm theo tên sân, địa chỉ và quận/huyện, không phân biệt dấu tiếng Việt.
+- Hiển thị số lượng kết quả theo thời gian thực.
+- Nút gọi sân từ danh sách và trang chi tiết.
+- Nút Chỉ đường mở Google Maps theo địa chỉ sân.
+- Phím Escape xóa nhanh từ khóa tìm kiếm.

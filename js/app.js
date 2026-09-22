@@ -27,7 +27,8 @@ function createCourtCard(court) {
   const district = escapeHTML(court.district);
   const phone = safePhone(court.phone);
   const detailUrl = `./pages/court.html?id=${encodeURIComponent(court.id)}`;
-  const telHref = phone ? `tel:${phone}` : '#';
+  const telHref = phone ? `tel:${phone}` : '';
+  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
 
   return `
     <article class="court-card">
@@ -52,7 +53,10 @@ function createCourtCard(court) {
       </div>
       <div class="card-footer">
         <a href="${detailUrl}" class="btn btn-secondary">Xem chi tiết</a>
-        <a href="${telHref}" class="btn-call" aria-label="Gọi ${name}">📞 Gọi sân</a>
+        <div class="card-actions">
+          ${phone ? `<a href="${telHref}" class="btn btn-primary btn-small" aria-label="Gọi ${name}">📞 Gọi</a>` : '<span class="muted small-text">Chưa có SĐT</span>'}
+          <a href="${mapHref}" class="btn btn-secondary btn-small" target="_blank" rel="noopener" aria-label="Chỉ đường đến ${name}">🧭 Chỉ đường</a>
+        </div>
       </div>
     </article>`;
 }
@@ -84,7 +88,9 @@ async function initHome() {
       empty.style.display = list.length ? 'none' : 'block';
       list.forEach(court => empty.insertAdjacentHTML('beforebegin', createCourtCard(court)));
       count.textContent = list.length;
-      summary.textContent = `Đang hiển thị ${list.length}/${courts.length} sân.`;
+      summary.textContent = list.length === courts.length
+        ? `Đang hiển thị ${list.length}/${courts.length} sân.`
+        : `Tìm thấy ${list.length}/${courts.length} sân phù hợp.`;
     }
 
     function filter() {
@@ -107,6 +113,14 @@ async function initHome() {
       searchName.value = '';
       filter();
       searchName.focus();
+    });
+
+    // Cho phép dùng phím Escape để xóa nhanh từ khóa tìm kiếm.
+    searchName.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && searchName.value) {
+        searchName.value = '';
+        filter();
+      }
     });
 
     $('#contributeBtn')?.addEventListener('click', () => {

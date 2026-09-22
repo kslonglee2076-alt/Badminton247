@@ -51,7 +51,7 @@ main{flex:1;padding:34px 0 48px}
 .low{color:var(--green-dark)}.high{color:var(--warning)}
 .price-time{color:#94a3b8;font-size:12px;line-height:1.4;margin:5px 0 10px}
 .price-time:last-child{margin-bottom:0}
-.card-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 19px;background:#f8fafc;border-top:1px solid #f1f5f9}
+.card-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 19px;background:#f8fafc;border-top:1px solid #f1f5f9}.card-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.btn-small{padding:7px 10px;font-size:12px}.small-text{font-size:12px}
 .btn-call{color:var(--text);font-size:13px;font-weight:700;text-decoration:none}.btn-call:hover{color:var(--green)}
 .btn-report{color:var(--danger);background:transparent;border:0;border-radius:5px;padding:6px 8px;font-size:12px;font-weight:600;cursor:pointer}.btn-report:hover{background:#fff1f2}
 .empty{display:none;grid-column:1/-1;text-align:center;padding:56px 20px;background:#fff;border:2px dashed #cbd5e1;border-radius:var(--radius);color:var(--muted)}
