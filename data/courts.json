@@ -17,7 +17,8 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   },
   {
     "id": 2,
@@ -37,7 +38,8 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   },
   {
     "id": 3,
@@ -57,7 +59,8 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   },
   {
     "id": 4,
@@ -77,7 +80,8 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   },
   {
     "id": 5,
@@ -97,7 +101,8 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   },
   {
     "id": 6,
@@ -117,6 +122,7 @@
     "verificationStatus": "Cộng đồng cung cấp",
     "mapUrl": "",
     "facilities": [],
-    "notes": ""
+    "notes": "",
+    "images": []
   }
 ]

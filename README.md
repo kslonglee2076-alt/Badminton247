@@ -73,3 +73,12 @@ Vào:
 - Trang chi tiết hiển thị nguồn dữ liệu, trạng thái xác minh, liên hệ, tiện ích và ghi chú.
 - Link Google Maps ưu tiên `mapUrl` nếu dữ liệu có sẵn; nếu không sẽ dùng tìm kiếm theo địa chỉ.
 - Không tự suy đoán tiện ích hoặc thông tin chưa được cung cấp.
+
+
+## Phase 5 — Ảnh sân & đóng góp cộng đồng
+
+- Mỗi sân có trường `images` trong `data/courts.json`.
+- Trang chi tiết có khu vực gallery; chỉ ảnh đã được thêm vào `images` mới hiển thị công khai.
+- Người dùng có thể mở GitHub Issue để gửi ảnh sân.
+- Người dùng có thể mở GitHub Issue để báo giá, giờ, địa chỉ hoặc số điện thoại sai.
+- Ảnh và thông tin gửi từ cộng đồng cần được kiểm tra trước khi thêm vào dữ liệu chính.

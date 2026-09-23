@@ -41,6 +41,58 @@ async function initDetail() {
     const facilitiesHTML = facilities.length
       ? facilities.map(item => `<span class="facility-chip">✓ ${escapeHTML(item)}</span>`).join('')
       : '<span class="muted">Chưa có dữ liệu tiện ích.</span>';
+
+    const images = Array.isArray(court.images) ? court.images.filter(Boolean) : [];
+    const galleryHTML = images.length
+      ? `<div class="photo-grid">${images.map((src, i) => `
+          <a class="photo-card" href="${escapeHTML(src)}" target="_blank" rel="noopener">
+            <img src="${escapeHTML(src)}" alt="Ảnh ${escapeHTML(court.name)} ${i + 1}" loading="lazy">
+          </a>`).join('')}</div>`
+      : `<div class="photo-empty">
+          <div class="photo-empty-icon">📷</div>
+          <strong>Chưa có ảnh sân</strong>
+          <p>Hãy giúp cộng đồng bổ sung ảnh thực tế của sân.</p>
+        </div>`;
+
+    const repoIssues = 'https://github.com/kslonglee2076-alt/Badminton247/issues/new';
+    const reportTitle = `[Báo sai thông tin] ${court.name}`;
+    const photoTitle = `[Gửi ảnh sân] ${court.name}`;
+    const reportBody = [
+      '## Báo thông tin sân',
+      '',
+      `- **Tên sân:** ${court.name}`,
+      `- **Địa chỉ:** ${court.address}`,
+      `- **Mã sân:** ${court.id}`,
+      '',
+      '## Nội dung cần sửa',
+      '',
+      'Vui lòng mô tả thông tin đang sai và thông tin đề nghị cập nhật.',
+      '',
+      '---',
+      'Gửi từ trang chi tiết SanCauLong.vn.'
+    ].join('\\n');
+    const photoBody = [
+      '## Gửi ảnh sân',
+      '',
+      `- **Tên sân:** ${court.name}`,
+      `- **Địa chỉ:** ${court.address}`,
+      `- **Mã sân:** ${court.id}`,
+      '',
+      '## Ảnh sân',
+      '',
+      'Kéo thả ảnh vào ô bình luận/description của GitHub Issue này để tải ảnh lên.',
+      'Vui lòng ưu tiên ảnh thực tế, rõ ràng và không chứa thông tin cá nhân nhạy cảm.',
+      '',
+      '## Ghi chú',
+      '',
+      'Mô tả ngắn ảnh được chụp ở khu vực nào (mặt tiền, sân, quầy lễ tân...).',
+      '',
+      '---',
+      'Gửi từ trang chi tiết SanCauLong.vn.'
+    ].join('\\n');
+    const photoIssueUrl = repoIssues + `?title=${encodeURIComponent(photoTitle)}&body=${encodeURIComponent(photoBody)}`;
+    const reportIssueUrl = repoIssues + `?title=${encodeURIComponent(reportTitle)}&body=${encodeURIComponent(reportBody)}`;
+
     document.title = `${court.name} - SanCauLong.vn`;
 
     container.innerHTML = `
@@ -69,6 +121,17 @@ async function initDetail() {
           <div class="info"><div class="info-label">Liên hệ</div><div class="info-value">${phone ? escapeHTML(court.phone) : 'Chưa có số điện thoại'}</div></div>
         </div>
 
+        <section class="photo-section">
+          <div class="section-mini-head">
+            <div>
+              <h2>Ảnh sân</h2>
+              <p>Ảnh thực tế do cộng đồng đóng góp sẽ được kiểm tra trước khi đưa vào dữ liệu chính.</p>
+            </div>
+            <a class="btn btn-secondary btn-small" target="_blank" rel="noopener" href="${photoIssueUrl}">📷 Gửi ảnh sân</a>
+          </div>
+          ${galleryHTML}
+        </section>
+
         <div class="detail-extra">
           <div class="extra-block">
             <h2>Tiện ích</h2>
@@ -79,6 +142,17 @@ async function initDetail() {
             <p class="detail-note">${escapeHTML(court.notes || 'Chưa có ghi chú.')}</p>
           </div>
         </div>
+
+        <section class="community-panel">
+          <div>
+            <h2>💬 Cùng cập nhật SanCauLong.vn</h2>
+            <p>Nếu giá, giờ hoạt động, số điện thoại hoặc địa chỉ chưa đúng, hãy báo lại. Bạn cũng có thể gửi ảnh để giúp người khác nhận biết sân dễ hơn.</p>
+          </div>
+          <div class="community-actions">
+            <a class="btn btn-primary btn-small" target="_blank" rel="noopener" href="${reportIssueUrl}">⚠️ Báo thông tin sai</a>
+            <a class="btn btn-secondary btn-small" target="_blank" rel="noopener" href="${photoIssueUrl}">📷 Gửi ảnh</a>
+          </div>
+        </section>
 
         <div class="notice">
           ℹ️ Giá và giờ hoạt động có thể thay đổi. Hãy liên hệ sân trước khi đến. Dữ liệu trên trang được gắn nguồn và trạng thái để dễ kiểm tra, nhưng vẫn nên xác minh thực tế trước khi sử dụng.
