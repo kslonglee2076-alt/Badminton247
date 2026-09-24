@@ -1,13 +1,12 @@
-
 'use strict';
 
-const $ = (selector) => document.querySelector(selector);
+const \$ = (selector) => document.querySelector(selector);
 const normalizeText = (value) =>
   String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
 const escapeHTML = (value) =>
   String(value ?? '').replace(/[&<>'"]/g, (char) => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
+    '&':'&amp;','<':'&lt;','>':'&gt;',"'":''','"':'&quot;'
   }[char]));
 
 const safePhone = (phone) => String(phone ?? '').replace(/[^0-9+]/g, '');
@@ -29,13 +28,16 @@ function createCourtCard(court) {
   const detailUrl = `./pages/court.html?id=${encodeURIComponent(court.id)}`;
   const telHref = phone ? `tel:${phone}` : '';
   const mapHref = court.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
+  
+  // Tối ưu hiển thị quy mô: Nếu là số thì thêm chữ "sân", nếu đã là chuỗi chữ sẵn thì giữ nguyên
+  const scaleDisplay = isNaN(court.scale) ? escapeHTML(court.scale) : `${court.scale} sân`;
 
   return `
     <article class="court-card">
       <div class="card-body">
         <div class="card-top">
           <span class="district">${district}</span>
-          <span class="scale">📏 Quy mô: ${Number(court.scale) || 0} sân</span>
+          <span class="scale">📏 Quy mô: ${scaleDisplay}</span>
         </div>
         <h3 class="court-name">${name}</h3>
         <p class="address">📍 ${address}</p>
@@ -55,7 +57,7 @@ function createCourtCard(court) {
       <div class="card-footer">
         <a href="${detailUrl}" class="btn btn-secondary">Xem chi tiết</a>
         <div class="card-actions">
-          ${phone ? `<a href="${telHref}" class="btn btn-primary btn-small" aria-label="Gọi ${name}">📞 Gọi</a>` : '<span class="muted small-text">Chưa có SĐT</span>'}
+          ${phone ? `<a href="\${telHref}" class="btn btn-primary btn-small" aria-label="Gọi \${name}">📞 Gọi</a>` : '<span class="muted small-text">Chưa có SĐT</span>'}
           <a href="${mapHref}" class="btn btn-secondary btn-small" target="_blank" rel="noopener" aria-label="Chỉ đường đến ${name}">🧭 Chỉ đường</a>
         </div>
       </div>
@@ -63,20 +65,21 @@ function createCourtCard(court) {
 }
 
 async function initHome() {
-  const grid = $('#courtGrid');
+  const grid = \$('#courtGrid');
   if (!grid) return;
 
   try {
     const courts = await loadCourts();
-    const districtFilter = $('#districtFilter');
-    const searchName = $('#searchName');
-    const count = $('#courtCount');
-    const summary = $('#resultSummary');
-    const empty = $('#emptyState');
+    const districtFilter = \$('#districtFilter');
+    const searchName = \$('#searchName');
+    const count = \$('#courtCount');
+    const summary = \$('#resultSummary');
+    const empty = \$('#emptyState');
 
+    // Tự động thêm các quận mới có trong file JSON vào thanh menu lựa chọn nếu chưa có sẵn
     const districts = [...new Set(courts.map(court => court.district))].sort((a,b) => a.localeCompare(b, 'vi'));
     districts.forEach(district => {
-      if (![...districtFilter.options].some(option => option.value === district)) {
+      if (district && ![...districtFilter.options].some(option => option.value === district)) {
         const option = document.createElement('option');
         option.value = district;
         option.textContent = district;
@@ -86,19 +89,28 @@ async function initHome() {
 
     function render(list) {
       grid.querySelectorAll('.court-card').forEach(card => card.remove());
-      empty.style.display = list.length ? 'none' : 'block';
-      list.forEach(court => empty.insertAdjacentHTML('beforebegin', createCourtCard(court)));
-      count.textContent = list.length;
-      summary.textContent = list.length === courts.length
-        ? `Đang hiển thị ${list.length}/${courts.length} sân.`
-        : `Tìm thấy ${list.length}/${courts.length} sân phù hợp.`;
+      if (empty) empty.style.display = list.length ? 'none' : 'block';
+      list.forEach(court => {
+        if (empty) {
+          empty.insertAdjacentHTML('beforebegin', createCourtCard(court));
+        } else {
+          grid.insertAdjacentHTML('beforeend', createCourtCard(court));
+        }
+      });
+      if (count) count.textContent = list.length;
+      if (summary) {
+        summary.textContent = list.length === courts.length
+          ? `Đang hiển thị ${list.length}/${courts.length} sân.`
+          : `Tìm thấy ${list.length}/${courts.length} sân phù hợp.`;
+      }
     }
 
     function filter() {
       const district = districtFilter.value;
       const keyword = normalizeText(searchName.value);
       const filtered = courts.filter(court => {
-        const matchesDistrict = district === 'all' || court.district === district;
+        // Thay đổi logic: Nếu chọn "" hoặc "all" hoặc trống thì xem như hiển thị tất cả quận
+        const matchesDistrict = district === '' || district === 'all' || court.district === district;
         const haystack = normalizeText(`${court.name} ${court.address} ${court.district}`);
         return matchesDistrict && (!keyword || haystack.includes(keyword));
       });
@@ -107,16 +119,15 @@ async function initHome() {
 
     districtFilter.addEventListener('change', filter);
     searchName.addEventListener('input', filter);
-    $('#searchForm')?.addEventListener('submit', event => event.preventDefault());
+    \$('#searchForm')?.addEventListener('submit', event => event.preventDefault());
 
-    $('#clearFiltersBtn')?.addEventListener('click', () => {
-      districtFilter.value = 'all';
+    \$('#clearFiltersBtn')?.addEventListener('click', () => {
+      districtFilter.value = '';
       searchName.value = '';
       filter();
       searchName.focus();
     });
 
-    // Cho phép dùng phím Escape để xóa nhanh từ khóa tìm kiếm.
     searchName.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && searchName.value) {
         searchName.value = '';
@@ -124,14 +135,14 @@ async function initHome() {
       }
     });
 
-    const contributeModal = $('#contributeModal');
-    const contributeForm = $('#contributeForm');
+    const contributeModal = \$('#contributeModal');
+    const contributeForm = \$('#contributeForm');
 
     function openContribution() {
       if (!contributeModal) return;
       contributeModal.hidden = false;
       document.body.classList.add('modal-open');
-      $('#contribName')?.focus();
+      \$('#contribName')?.focus();
     }
 
     function closeContribution() {
@@ -140,9 +151,9 @@ async function initHome() {
       document.body.classList.remove('modal-open');
     }
 
-    $('#contributeBtn')?.addEventListener('click', openContribution);
-    $('#closeContributeBtn')?.addEventListener('click', closeContribution);
-    $('#cancelContributeBtn')?.addEventListener('click', closeContribution);
+    \$('#contributeBtn')?.addEventListener('click', openContribution);
+    \$('#closeContributeBtn')?.addEventListener('click', closeContribution);
+    \$('#cancelContributeBtn')?.addEventListener('click', closeContribution);
 
     contributeModal?.addEventListener('click', (event) => {
       if (event.target === contributeModal) closeContribution();
@@ -167,7 +178,7 @@ async function initHome() {
         `- **Địa chỉ:** ${data.address || ''}`,
         `- **Quận / Huyện:** ${data.district || ''}`,
         `- **Số điện thoại:** ${data.phone || 'Chưa cung cấp'}`,
-        `- **Quy mô:** ${data.scale ? `${data.scale} sân` : 'Chưa cung cấp'}`,
+        `- **Quy mô:** ${data.scale ? `\${data.scale} sân` : 'Chưa cung cấp'}`,
         `- **Giờ hoạt động:** ${data.hours || 'Chưa cung cấp'}`,
         `- **Giá thấp điểm:** ${data.lowPrice || 'Chưa cung cấp'}`,
         `- **Giá cao điểm:** ${data.highPrice || 'Chưa cung cấp'}`,
