@@ -27,9 +27,8 @@ function createCourtCard(court) {
   const phone = safePhone(court.phone);
   const detailUrl = `./pages/court.html?id=${encodeURIComponent(court.id)}`;
   const telHref = phone ? `tel:${phone}` : '';
-  const mapHref = court.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address)}`;
+  const mapHref = court.mapUrl || `https://google.com{encodeURIComponent(court.address)}`;
   
-  // Tối ưu hiển thị quy mô: Nếu là số thì thêm chữ "sân", nếu đã là chuỗi chữ sẵn thì giữ nguyên
   const scaleDisplay = isNaN(court.scale) ? escapeHTML(court.scale) : `${court.scale} sân`;
 
   return `
@@ -76,7 +75,6 @@ async function initHome() {
     const summary = \$('#resultSummary');
     const empty = \$('#emptyState');
 
-    // Tự động thêm các quận mới có trong file JSON vào thanh menu lựa chọn nếu chưa có sẵn
     const districts = [...new Set(courts.map(court => court.district))].sort((a,b) => a.localeCompare(b, 'vi'));
     districts.forEach(district => {
       if (district && ![...districtFilter.options].some(option => option.value === district)) {
@@ -109,7 +107,6 @@ async function initHome() {
       const district = districtFilter.value;
       const keyword = normalizeText(searchName.value);
       const filtered = courts.filter(court => {
-        // Thay đổi logic: Nếu chọn "" hoặc "all" hoặc trống thì xem như hiển thị tất cả quận
         const matchesDistrict = district === '' || district === 'all' || court.district === district;
         const haystack = normalizeText(`${court.name} ${court.address} ${court.district}`);
         return matchesDistrict && (!keyword || haystack.includes(keyword));
@@ -198,7 +195,7 @@ async function initHome() {
       ].join('\n');
 
       const issueUrl =
-        'https://github.com/kslonglee2076-alt/Badminton247/issues/new' +
+        'https://github.com' +
         `?title=${encodeURIComponent(title)}` +
         `&body=${encodeURIComponent(body)}`;
 
