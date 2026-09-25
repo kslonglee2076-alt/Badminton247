@@ -1,6 +1,6 @@
 'use strict';
 
-const \$ = (selector) => document.querySelector(selector);
+const $ = (selector) => document.querySelector(selector);
 
 const normalizeText = (value) =>
   String(value ?? '')
@@ -14,7 +14,7 @@ const escapeHTML = (value) =>
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
-    "'": '&#39;', // Đã sửa: Dùng mã entity an toàn, không lo xung đột dấu nháy
+    "'": '&#39;',
     '"': '&quot;'
   }[char]));
 
@@ -87,7 +87,7 @@ function createCourtCard(court) {
       <div class="card-footer">
         <a href="${detailUrl}" class="btn btn-secondary">Xem chi tiết</a>
         <div class="card-actions">
-          ${
+          \${
             phone
               ? `<a href="\${telHref}" class="btn btn-primary btn-small" aria-label="Gọi \${name}">📞 Gọi</a>`
               : `<span class="muted small-text">Chưa có SĐT</span>`
@@ -100,17 +100,17 @@ function createCourtCard(court) {
 }
 
 async function initHome() {
-  const grid = \$('#courtGrid');
+  const grid = $('#courtGrid');
   if (!grid) return;
 
   try {
     const courts = await loadCourts();
 
-    const districtFilter = \$('#districtFilter');
-    const searchName = \$('#searchName');
-    const count = \$('#courtCount');
-    const summary = \$('#resultSummary');
-    const empty = \$('#emptyState');
+    const districtFilter = $('#districtFilter');
+    const searchName = $('#searchName');
+    const count = $('#courtCount');
+    const summary = $('#resultSummary');
+    const empty = $('#emptyState');
 
     const districts = [
       ...new Set(
@@ -154,8 +154,8 @@ async function initHome() {
       if (summary) {
         summary.textContent =
           list.length === courts.length
-            ? `Đang hiển thị ${list.length}/${courts.length} sân.`
-            : `Tìm thấy ${list.length}/${courts.length} sân phù hợp.`;
+            ? `Đang hiển thị \${list.length}/\${courts.length} sân.`
+            : `Tìm thấy \${list.length}/\${courts.length} sân phù hợp.`;
       }
     }
 
@@ -170,7 +170,7 @@ async function initHome() {
           court.district === district;
 
         const haystack = normalizeText(
-          `${court.name || ''} ${court.address || ''} ${court.district || ''}`
+          `\${court.name || ''} \${court.address || ''} \${court.district || ''}`
         );
 
         return (
@@ -184,9 +184,9 @@ async function initHome() {
 
     districtFilter?.addEventListener('change', filter);
     searchName?.addEventListener('input', filter);
-    \$('#searchForm')?.addEventListener('submit', event => event.preventDefault());
+    $('#searchForm')?.addEventListener('submit', event => event.preventDefault());
 
-    \$('#clearFiltersBtn')?.addEventListener('click', () => {
+    $('#clearFiltersBtn')?.addEventListener('click', () => {
       if (districtFilter) districtFilter.value = '';
       if (searchName) searchName.value = '';
       filter();
@@ -203,14 +203,14 @@ async function initHome() {
     /* =========================
        MODAL ĐÓNG GÓP SÂN
        ========================= */
-    const contributeModal = \$('#contributeModal');
-    const contributeForm = \$('#contributeForm');
+    const contributeModal = $('#contributeModal');
+    const contributeForm = $('#contributeForm');
 
     function openContribution() {
       if (!contributeModal) return;
       contributeModal.hidden = false;
       document.body.classList.add('modal-open');
-      \$('#contribName')?.focus();
+      $('#contribName')?.focus();
     }
 
     function closeContribution() {
@@ -219,9 +219,9 @@ async function initHome() {
       document.body.classList.remove('modal-open');
     }
 
-    \$('#contributeBtn')?.addEventListener('click', openContribution);
-    \$('#closeContributeBtn')?.addEventListener('click', closeContribution);
-    \$('#cancelContributeBtn')?.addEventListener('click', closeContribution);
+    $('#contributeBtn')?.addEventListener('click', openContribution);
+    $('#closeContributeBtn')?.addEventListener('click', closeContribution);
+    $('#cancelContributeBtn')?.addEventListener('click', closeContribution);
 
     contributeModal?.addEventListener('click', event => {
       if (event.target === contributeModal) {
@@ -239,20 +239,20 @@ async function initHome() {
       event.preventDefault();
 
       const data = Object.fromEntries(new FormData(contributeForm).entries());
-      const title = `[Đóng góp sân] ${data.name || 'Sân cầu lông mới'}`;
+      const title = `[Đóng góp sân] \${data.name || 'Sân cầu lông mới'}`;
 
       const body = [
         '## Thông tin sân',
         '',
-        `- **Tên sân:** ${data.name || ''}`,
-        `- **Địa chỉ:** ${data.address || ''}`,
-        `- **Quận / Huyện:** ${data.district || ''}`,
-        `- **Số điện thoại:** ${data.phone || 'Chưa cung cấp'}`,
-        `- **Quy mô:** ${data.scale ? `\${data.scale} sân` : 'Chưa cung cấp'}`,
-        `- **Giờ hoạt động:** ${data.hours || 'Chưa cung cấp'}`,
-        `- **Giá thấp điểm:** ${data.lowPrice || 'Chưa cung cấp'}`,
-        `- **Giá cao điểm:** ${data.highPrice || 'Chưa cung cấp'}`,
-        `- **Google Maps:** ${data.map || 'Chưa cung cấp'}`,
+        `- **Tên sân:** \${data.name || ''}`,
+        `- **Địa chỉ:** \${data.address || ''}`,
+        `- **Quận / Huyện:** \${data.district || ''}`,
+        `- **Số điện thoại:** \${data.phone || 'Chưa cung cấp'}`,
+        `- **Quy mô:** \${data.scale ? `\\\\${data.scale} sân` : 'Chưa cung cấp'}`,
+        `- **Giờ hoạt động:** \${data.hours || 'Chưa cung cấp'}`,
+        `- **Giá thấp điểm:** \${data.lowPrice || 'Chưa cung cấp'}`,
+        `- **Giá cao điểm:** \${data.highPrice || 'Chưa cung cấp'}`,
+        `- **Google Maps:** \${data.map || 'Chưa cung cấp'}`,
         '',
         '## Thông tin thêm',
         '',
@@ -268,9 +268,9 @@ async function initHome() {
       ].join('\n');
 
       const issueUrl =
-        'https://github.com' +
-        `?title=${encodeURIComponent(title)}` +
-        `&body=${encodeURIComponent(body)}`;
+        'https://github.com/kslonglee2076-alt/Badminton247/issues/new' +
+        `?title=\${encodeURIComponent(title)}` +
+        `&body=\${encodeURIComponent(body)}`;
 
       window.open(issueUrl, '_blank', 'noopener');
       contributeForm.reset();
@@ -279,7 +279,7 @@ async function initHome() {
 
     render(courts);
   } catch (error) {
-    grid.innerHTML = `<div class="empty" style="display:block"><strong>Không tải được dữ liệu sân</strong>${escapeHTML(error.message)}</div>`;
+    grid.innerHTML = `<div class="empty" style="display:block"><strong>Không tải được dữ liệu sân</strong>\${escapeHTML(error.message)}</div>`;
   }
 }
 
