@@ -1,6 +1,6 @@
 'use strict';
 
-const $ = (selector) => document.querySelector(selector);
+const \$ = (selector) => document.querySelector(selector);
 
 const normalizeText = (value) =>
   String(value ?? '')
@@ -14,7 +14,7 @@ const escapeHTML = (value) =>
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
-    "'": '&#39;',
+    "'": '&#39;', // Đã sửa: Dùng mã entity an toàn, không lo xung đột dấu nháy
     '"': '&quot;'
   }[char]));
 
@@ -43,16 +43,11 @@ function createCourtCard(court) {
   const name = escapeHTML(court.name);
   const address = escapeHTML(court.address);
   const district = escapeHTML(court.district);
-
   const phone = safePhone(court.phone);
 
-  const detailUrl =
-    `./pages/court.html?id=${encodeURIComponent(court.id)}`;
-
+  const detailUrl = `./pages/court.html?id=${encodeURIComponent(court.id)}`;
   const telHref = phone ? `tel:${phone}` : '';
-
-  const mapHref = court.mapUrl ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address || '')}`;
+  const mapHref = court.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.address || '')}`;
 
   const scaleDisplay = isNaN(court.scale)
     ? escapeHTML(court.scale)
@@ -60,123 +55,62 @@ function createCourtCard(court) {
 
   return `
     <article class="court-card">
-
       <div class="card-body">
-
         <div class="card-top">
           <span class="district">${district}</span>
-
-          <span class="scale">
-            📏 Quy mô: ${scaleDisplay}
-          </span>
+          <span class="scale">📏 Quy mô: ${scaleDisplay}</span>
         </div>
-
-        <h3 class="court-name">
-          ${name}
-        </h3>
-
-        <p class="address">
-          📍 ${address}
-        </p>
-
+        <h3 class="court-name">${name}</h3>
+        <p class="address">📍 ${address}</p>
         <div class="meta-row">
-
           <span class="status ${court.verified ? 'verified' : ''}">
             ${escapeHTML(
               court.verificationStatus ||
-              (court.verified
-                ? 'Đã xác minh'
-                : 'Cộng đồng cung cấp')
+              (court.verified ? 'Đã xác minh' : 'Cộng đồng cung cấp')
             )}
           </span>
-
-          <span class="updated-badge">
-            Cập nhật ${escapeHTML(court.lastUpdated || 'chưa rõ')}
-          </span>
-
+          <span class="updated-badge">Cập nhật ${escapeHTML(court.lastUpdated || 'chưa rõ')}</span>
         </div>
-
         <div class="price-box">
-
           <div class="price-row low">
             <span>☀️ Giờ thấp điểm</span>
             <span>${escapeHTML(court.lowPrice)}</span>
           </div>
-
-          <div class="price-time">
-            ${escapeHTML(court.lowTime)}
-          </div>
-
+          <div class="price-time">${escapeHTML(court.lowTime)}</div>
           <div class="price-row high">
             <span>⚡ Giờ cao điểm</span>
             <span>${escapeHTML(court.highPrice)}</span>
           </div>
-
-          <div class="price-time">
-            ${escapeHTML(court.highTime)}
-          </div>
-
+          <div class="price-time">${escapeHTML(court.highTime)}</div>
         </div>
-
       </div>
-
       <div class="card-footer">
-
-        <a href="${detailUrl}" class="btn btn-secondary">
-          Xem chi tiết
-        </a>
-
+        <a href="${detailUrl}" class="btn btn-secondary">Xem chi tiết</a>
         <div class="card-actions">
-
           ${
             phone
-              ? `
-                <a
-                  href="${telHref}"
-                  class="btn btn-primary btn-small"
-                  aria-label="Gọi ${name}"
-                >
-                  📞 Gọi
-                </a>
-              `
-              : `
-                <span class="muted small-text">
-                  Chưa có SĐT
-                </span>
-              `
+              ? `<a href="\${telHref}" class="btn btn-primary btn-small" aria-label="Gọi \${name}">📞 Gọi</a>`
+              : `<span class="muted small-text">Chưa có SĐT</span>`
           }
-
-          <a
-            href="${mapHref}"
-            class="btn btn-secondary btn-small"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chỉ đường đến ${name}"
-          >
-            🧭 Chỉ đường
-          </a>
-
+          <a href="${mapHref}" class="btn btn-secondary btn-small" target="_blank" rel="noopener noreferrer" aria-label="Chỉ đường đến ${name}">🧭 Chỉ đường</a>
         </div>
-
       </div>
-
     </article>
   `;
 }
 
 async function initHome() {
-  const grid = $('#courtGrid');
-
+  const grid = \$('#courtGrid');
   if (!grid) return;
 
   try {
     const courts = await loadCourts();
 
-    const districtFilter = $('#districtFilter');
-    const searchName = $('#searchName');
-    const count = $('#courtCount');
-    const summary = $('#resultSummary');
-    const empty = $('#emptyState');
+    const districtFilter = \$('#districtFilter');
+    const searchName = \$('#searchName');
+    const count = \$('#courtCount');
+    const summary = \$('#resultSummary');
+    const empty = \$('#emptyState');
 
     const districts = [
       ...new Set(
@@ -188,47 +122,29 @@ async function initHome() {
 
     if (districtFilter) {
       districts.forEach(district => {
-
-        const exists = [
-          ...districtFilter.options
-        ].some(option => option.value === district);
-
+        const exists = [...districtFilter.options].some(option => option.value === district);
         if (!exists) {
           const option = document.createElement('option');
-
           option.value = district;
           option.textContent = district;
-
           districtFilter.appendChild(option);
         }
       });
     }
 
     function render(list) {
-
-      grid
-        .querySelectorAll('.court-card')
-        .forEach(card => card.remove());
+      grid.querySelectorAll('.court-card').forEach(card => card.remove());
 
       if (empty) {
-        empty.style.display =
-          list.length ? 'none' : 'block';
+        empty.style.display = list.length ? 'none' : 'block';
       }
 
       list.forEach(court => {
-
         if (empty) {
-          empty.insertAdjacentHTML(
-            'beforebegin',
-            createCourtCard(court)
-          );
+          empty.insertAdjacentHTML('beforebegin', createCourtCard(court));
         } else {
-          grid.insertAdjacentHTML(
-            'beforeend',
-            createCourtCard(court)
-          );
+          grid.insertAdjacentHTML('beforeend', createCourtCard(court));
         }
-
       });
 
       if (count) {
@@ -244,24 +160,18 @@ async function initHome() {
     }
 
     function filter() {
-
-      const district =
-        districtFilter?.value || '';
-
-      const keyword =
-        normalizeText(searchName?.value || '');
+      const district = districtFilter?.value || '';
+      const keyword = normalizeText(searchName?.value || '');
 
       const filtered = courts.filter(court => {
-
         const matchesDistrict =
           district === '' ||
           district === 'all' ||
           court.district === district;
 
-        const haystack =
-          normalizeText(
-            `${court.name || ''} ${court.address || ''} ${court.district || ''}`
-          );
+        const haystack = normalizeText(
+          `${court.name || ''} ${court.address || ''} ${court.district || ''}`
+        );
 
         return (
           matchesDistrict &&
@@ -272,213 +182,105 @@ async function initHome() {
       render(filtered);
     }
 
-    districtFilter?.addEventListener(
-      'change',
-      filter
-    );
+    districtFilter?.addEventListener('change', filter);
+    searchName?.addEventListener('input', filter);
+    \$('#searchForm')?.addEventListener('submit', event => event.preventDefault());
 
-    searchName?.addEventListener(
-      'input',
-      filter
-    );
+    \$('#clearFiltersBtn')?.addEventListener('click', () => {
+      if (districtFilter) districtFilter.value = '';
+      if (searchName) searchName.value = '';
+      filter();
+      searchName?.focus();
+    });
 
-    $('#searchForm')?.addEventListener(
-      'submit',
-      event => event.preventDefault()
-    );
-
-    $('#clearFiltersBtn')?.addEventListener(
-      'click',
-      () => {
-
-        if (districtFilter) {
-          districtFilter.value = '';
-        }
-
-        if (searchName) {
-          searchName.value = '';
-        }
-
+    searchName?.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && searchName.value) {
+        searchName.value = '';
         filter();
-
-        searchName?.focus();
       }
-    );
-
-    searchName?.addEventListener(
-      'keydown',
-      event => {
-
-        if (
-          event.key === 'Escape' &&
-          searchName.value
-        ) {
-          searchName.value = '';
-          filter();
-        }
-      }
-    );
+    });
 
     /* =========================
        MODAL ĐÓNG GÓP SÂN
        ========================= */
-
-    const contributeModal =
-      $('#contributeModal');
-
-    const contributeForm =
-      $('#contributeForm');
+    const contributeModal = \$('#contributeModal');
+    const contributeForm = \$('#contributeForm');
 
     function openContribution() {
-
       if (!contributeModal) return;
-
       contributeModal.hidden = false;
-
-      document.body.classList.add(
-        'modal-open'
-      );
-
-      $('#contribName')?.focus();
+      document.body.classList.add('modal-open');
+      \$('#contribName')?.focus();
     }
 
     function closeContribution() {
-
       if (!contributeModal) return;
-
       contributeModal.hidden = true;
-
-      document.body.classList.remove(
-        'modal-open'
-      );
+      document.body.classList.remove('modal-open');
     }
 
-    $('#contributeBtn')?.addEventListener(
-      'click',
-      openContribution
-    );
+    \$('#contributeBtn')?.addEventListener('click', openContribution);
+    \$('#closeContributeBtn')?.addEventListener('click', closeContribution);
+    \$('#cancelContributeBtn')?.addEventListener('click', closeContribution);
 
-    $('#closeContributeBtn')?.addEventListener(
-      'click',
-      closeContribution
-    );
-
-    $('#cancelContributeBtn')?.addEventListener(
-      'click',
-      closeContribution
-    );
-
-    contributeModal?.addEventListener(
-      'click',
-      event => {
-
-        if (event.target === contributeModal) {
-          closeContribution();
-        }
-      }
-    );
-
-    document.addEventListener(
-      'keydown',
-      event => {
-
-        if (
-          event.key === 'Escape' &&
-          contributeModal &&
-          !contributeModal.hidden
-        ) {
-          closeContribution();
-        }
-      }
-    );
-
-    /* =========================
-       GỬI ĐÓNG GÓP
-       ========================= */
-
-    contributeForm?.addEventListener(
-      'submit',
-      event => {
-
-        event.preventDefault();
-
-        const data = Object.fromEntries(
-          new FormData(contributeForm).entries()
-        );
-
-        const title =
-          `[Đóng góp sân] ${data.name || 'Sân cầu lông mới'}`;
-
-        const body = [
-          '## Thông tin sân',
-          '',
-          `- **Tên sân:** ${data.name || ''}`,
-          `- **Địa chỉ:** ${data.address || ''}`,
-          `- **Quận / Huyện:** ${data.district || ''}`,
-          `- **Số điện thoại:** ${data.phone || 'Chưa cung cấp'}`,
-          `- **Quy mô:** ${data.scale ? `${data.scale} sân` : 'Chưa cung cấp'}`,
-          `- **Giờ hoạt động:** ${data.hours || 'Chưa cung cấp'}`,
-          `- **Giá thấp điểm:** ${data.lowPrice || 'Chưa cung cấp'}`,
-          `- **Giá cao điểm:** ${data.highPrice || 'Chưa cung cấp'}`,
-          `- **Google Maps:** ${data.map || 'Chưa cung cấp'}`,
-          '',
-          '## Thông tin thêm',
-          '',
-          data.note || 'Không có',
-          '',
-          '## Ý kiến góp ý',
-          '',
-          data.feedback || 'Không có',
-          '',
-          '---',
-          'Được gửi từ biểu mẫu Đóng góp sân trên SanCauLong.vn.',
-          'Vui lòng kiểm tra thông tin trước khi cập nhật vào data/courts.json.'
-        ].join('\n');
-
-        /*
-         * THAY URL NÀY BẰNG REPOSITORY GITHUB CỦA BẠN
-         *
-         * Ví dụ:
-         * https://github.com/USERNAME/REPOSITORY/issues/new
-         */
-
-        const issueUrl =
-          'https://github.com/USERNAME/REPOSITORY/issues/new' +
-          `?title=${encodeURIComponent(title)}` +
-          `&body=${encodeURIComponent(body)}`;
-
-        window.open(
-          issueUrl,
-          '_blank',
-          'noopener,noreferrer'
-        );
-
-        contributeForm.reset();
+    contributeModal?.addEventListener('click', event => {
+      if (event.target === contributeModal) {
         closeContribution();
       }
-    );
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && contributeModal && !contributeModal.hidden) {
+        closeContribution();
+      }
+    });
+
+    contributeForm?.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const data = Object.fromEntries(new FormData(contributeForm).entries());
+      const title = `[Đóng góp sân] ${data.name || 'Sân cầu lông mới'}`;
+
+      const body = [
+        '## Thông tin sân',
+        '',
+        `- **Tên sân:** ${data.name || ''}`,
+        `- **Địa chỉ:** ${data.address || ''}`,
+        `- **Quận / Huyện:** ${data.district || ''}`,
+        `- **Số điện thoại:** ${data.phone || 'Chưa cung cấp'}`,
+        `- **Quy mô:** ${data.scale ? `\${data.scale} sân` : 'Chưa cung cấp'}`,
+        `- **Giờ hoạt động:** ${data.hours || 'Chưa cung cấp'}`,
+        `- **Giá thấp điểm:** ${data.lowPrice || 'Chưa cung cấp'}`,
+        `- **Giá cao điểm:** ${data.highPrice || 'Chưa cung cấp'}`,
+        `- **Google Maps:** ${data.map || 'Chưa cung cấp'}`,
+        '',
+        '## Thông tin thêm',
+        '',
+        data.note || 'Không có',
+        '',
+        '## Ý kiến góp ý',
+        '',
+        data.feedback || 'Không có',
+        '',
+        '---',
+        'Được gửi từ biểu mẫu Đóng góp sân trên SanCauLong.vn.',
+        'Vui lòng kiểm tra thông tin trước khi cập nhật vào data/courts.json.'
+      ].join('\n');
+
+      const issueUrl =
+        'https://github.com' +
+        `?title=${encodeURIComponent(title)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+      window.open(issueUrl, '_blank', 'noopener');
+      contributeForm.reset();
+      closeContribution();
+    });
 
     render(courts);
-
   } catch (error) {
-
-    grid.innerHTML = `
-      <div
-        class="empty"
-        style="display:block"
-      >
-        <strong>
-          Không tải được dữ liệu sân
-        </strong>
-        <p>
-          ${escapeHTML(error.message)}
-        </p>
-      </div>
-    `;
+    grid.innerHTML = `<div class="empty" style="display:block"><strong>Không tải được dữ liệu sân</strong>${escapeHTML(error.message)}</div>`;
   }
 }
 
-document.addEventListener(
-  'DOMContentLoaded',
-  initHome
-);
+document.addEventListener('DOMContentLoaded', initHome);
